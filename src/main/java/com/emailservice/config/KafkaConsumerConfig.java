@@ -1,6 +1,6 @@
 package com.emailservice.config;
 
-import com.emailservice.model.ForgotPasswordEvent;
+import com.emailservice.model.EmailRequestEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,9 +21,8 @@ public class KafkaConsumerConfig {
     private String bootstrapServers;
 
     @Bean
-    public ConsumerFactory<String, ForgotPasswordEvent> consumerFactory() {
-        JsonDeserializer<ForgotPasswordEvent> deserializer =
-                new JsonDeserializer<>(ForgotPasswordEvent.class);
+    public ConsumerFactory<String, EmailRequestEvent> consumerFactory() {
+        JsonDeserializer<EmailRequestEvent> deserializer = new JsonDeserializer<>(EmailRequestEvent.class, false);
         deserializer.addTrustedPackages("*");
 
         Map<String, Object> props = new HashMap<>();
@@ -36,9 +35,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ForgotPasswordEvent> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ForgotPasswordEvent> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, EmailRequestEvent> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, EmailRequestEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
